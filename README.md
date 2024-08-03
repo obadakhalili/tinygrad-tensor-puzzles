@@ -1,8 +1,8 @@
-# Tensor Puzzles
-- by [Sasha Rush](http://rush-nlp.com) - [srush_nlp](https://twitter.com/srush_nlp) (with Marcos Treviso)
+# tinygrad Tensor Puzzles
 
+This fork is an adaptation of [Sasha's Tensor Puzzles](https://github.com/srush/Tensor-Puzzles) in tinygrad.
 
-
+<hr/>
 
 When learning a tensor programming language like PyTorch or Numpy it
 is tempting to rely on the standard library (or more honestly
