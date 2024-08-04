@@ -8,6 +8,7 @@ import numpy as np
 import random
 import sys
 import typing
+# from typing import Any, Tuple, Annotated, get_type_hints, ClassVar
 import matplotlib.pyplot as plt
 
 import urllib
@@ -17,6 +18,17 @@ from chalk import *
 import chalk
 from colour import Color
 from IPython.display import display, SVG
+
+from tinygrad import Tensor
+
+class TensorType(Tensor):
+        # def __new__(cls, *args, **kwargs):
+        #     raise RuntimeError(f"Class {cls.__name__} cannot be instantiated.")
+        
+        def __class_getitem__(cls, shape: Tuple[typing.Any, ...]):
+            if not isinstance(shape, tuple):
+                shape = (shape,)
+            return typing.Annotated[Tensor, {"shape": shape}]
 
 color = [Color("red")] * 50
 
@@ -112,8 +124,8 @@ def spec(draw, x, min_size=1):
     for k in gth:
         if not hasattr(gth[k], "__metadata__"):
             continue
-        dims = gth[k].__metadata__[0]["details"][0].dims
-        names.update([d.name for d in dims if isinstance(d.name, str)])
+        dims = gth[k].__metadata__[0]["shape"]
+        names.update([d for d in dims if isinstance(d, str)])
     names = list(names)
 
     # draw sizes for each dim.
@@ -134,14 +146,16 @@ def spec(draw, x, min_size=1):
             continue
         shape = tuple(
             [
-                sizes[d.name] if isinstance(d.name, str) else d.size
-                for d in gth[k].__metadata__[0]["details"][0].dims
+                sizes[d] if isinstance(d, str) else d
+                for d in gth[k].__metadata__[0]["shape"]
             ]
         )
         dtype = (torch_to_numpy_dtype_dict[
-                    gth[k].__metadata__[0]["details"][1].dtype
+                    # fix this
+                    # gth[k].__metadata__[0]["details"][1].dtype
+                    torch.int32
                 ]
-                if len(gth[k].__metadata__[0]["details"]) >= 2
+                if len(gth[k].__metadata__[0]["shape"]) >= 2
                 else int)
         ret[k] = draw(
             arrays(

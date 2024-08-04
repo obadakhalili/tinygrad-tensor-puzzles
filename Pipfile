@@ -12,6 +12,7 @@ ipykernel = "*"
 numpy = "*"
 matplotlib = "*"
 torch = "*"
+tinygrad = "*"
 
 [dev-packages]
 
