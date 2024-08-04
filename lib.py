@@ -16,7 +16,7 @@ from colour import Color
 from IPython.display import display, SVG
 
 
-class TensorType(Tensor):
+class TinyType(Tensor):
   def __class_getitem__(cls, args: Tuple[Any, ...]):
     if not isinstance(args, tuple):
       args = (args,)
@@ -296,4 +296,4 @@ def run_test(fn):
   )
 
 
-__all__ = ["draw_examples", "make_test", "run_test", "TensorType"]
+__all__ = ["draw_examples", "make_test", "run_test", "TinyType"]
