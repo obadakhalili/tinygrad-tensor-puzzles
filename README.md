@@ -4,10 +4,10 @@
 
 ## Motivation
 
-When learning a tensor programming language like PyTorch or Numpy it
+When learning a tensor library like tinygrad or Numpy it
 is tempting to rely on the standard library (or more honestly
 StackOverflow) to find a magic function for everything. But in
-practice, the tensor language is extremely expressive, and you can
+practice, the tensor APIs are extremely expressive, and you can
 do most things from first principles and clever use of broadcasting.
 
 This is a collection of 21 tensor puzzles. Like chess puzzles, these are
