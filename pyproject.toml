@@ -1,5 +1,5 @@
 [tool.ruff]
-include = ["lib.py"]
+include = ["lib.py", "Tensor Puzzlers.ipynb"]
 line-length = 88
 indent-width = 2
 target-version = "py310"
