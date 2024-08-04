@@ -17,9 +17,6 @@ from IPython.display import display, SVG
 
 
 class TensorType(Tensor):
-  # def __new__(cls, *args, **kwargs):
-  #     raise RuntimeError(f"Class {cls.__name__} cannot be instantiated.")
-
   def __class_getitem__(cls, args: Tuple[Any, ...]):
     if not isinstance(args, tuple):
       args = (args,)
@@ -78,7 +75,6 @@ def grid(diagrams):
 def draw_example(data):
   name = data["name"]
   keys = list(data["vals"][0].keys())
-  # cols = [[vstrut(0)] + [vstrut(0.5) / text(f"Ex. {i}", 0.5).fill_color(Color("black")).line_width(0.0) / vstrut(0.5) for i in range(len(data["vals"]))]]
   cols = []
   for k in keys:
     mat = [
