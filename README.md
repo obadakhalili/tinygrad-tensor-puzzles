@@ -10,14 +10,14 @@ StackOverflow) to find a magic function for everything. But in
 practice, the tensor language is extremely expressive, and you can
 do most things from first principles and clever use of broadcasting.
 
-This is a collection of 21 tensor puzzles. Like chess puzzles these are
-not meant to simulate the complexity of a real program, but to practice
+This is a collection of 21 tensor puzzles. Like chess puzzles, these are
+not meant to simulate the complexity of a real program but to practice
 in a simplified environment. Each puzzle asks you to reimplement one
 function in the NumPy standard library without magic.
 
 ## Video
 
-If you are interested, there is also a youtube walkthrough of the puzzles by the original author:
+If you are interested, there is also a YouTube walkthrough of the puzzles by the original author:
 
 [![Watch the video](https://img.youtube.com/vi/SiwTAyyvt5s/default.jpg)](https://youtu.be/Hafo7hIl8MU)
 
@@ -50,9 +50,9 @@ To start, install the dependencies using pipenv with `pipenv install` or using p
 
    ![](https://pbs.twimg.com/media/FQywor0WYAssn7Y?format=png&name=large)
 
-2. `src/lib.py` provides a number of utilities that you will find useful throughout the puzzles. Below is an explaination of each.
+2. `src/lib.py` provides several utilities that you will find useful throughout the puzzles. Below is an explanation of each.
 
-3. `TinyType` is a little utility type similar to `TensorType` from [TorchTyping](https://github.com/patrick-kidger/torchtyping/tree/master). It is used to specify the shapes and data types of tensors, which is used by `draw_examples` and `make_test` to generate sample data and test your solutions.
+3. `TinyType` is a small utility type similar to `TensorType` from [TorchTyping](https://github.com/patrick-kidger/torchtyping/tree/master). It is used to specify the shapes and data types of tensors, which is used by `draw_examples` and `make_test` to generate sample data and test your solutions.
 
    Examples:
 
@@ -79,17 +79,17 @@ To start, install the dependencies using pipenv with `pipenv install` or using p
     draw_examples("arange", [{"input": Tensor([i]), "output": arange(i)} for i in [5, 3, 9]])
    ```
 
-   In a jupyter notebook, the output is displayed as:
+   In a Jupyter notebook, the output is displayed as:
    ![arange](./assets/arange.svg)
 
    > [!IMPORTANT]  
    > In diagrams, 0's are transparent, positives are orange, and negatives are blue.
 
-   `draw_examples` uses a composite Hypothesis strategy to generate sample data, which is used here and in testing utilities as will be seen later.
+   `draw_examples` uses a composite [Hypothesis](https://hypothesis.works/) strategy to generate sample data, which is used here and in the test utility, as will be seen later.
 
 5. `make_test` takes a title, solution, spec function, and other configuration arguments, and performs two things: first, it draws an example depicting your solution's output compared to the spec function's output. second, it returns a test function which when executed will test your solution with a set of drawn sample data.
 
-   Let's take as an example the `ones` puzzle, which given an integer `i` returns a tensor of size `i` filled with ones. For the sake of demonstration, let's assume the the solution is implemented incorrectly, returning a tensor of zeros instead of ones.
+   Let's take as an example the `ones` puzzle, which given an integer `i` returns a tensor of size `i` filled with ones. For the sake of demonstration, let's assume the solution is implemented incorrectly, returning a tensor of zeros instead of ones.
 
    ```py
    def ones_spec(out):
@@ -104,11 +104,11 @@ To start, install the dependencies using pipenv with `pipenv install` or using p
    test_ones = make_test("ones", ones, ones_spec, add_sizes=["i"])
    ```
 
-   Running the example above, will display the following diagram:
+   Running the example above will display the following diagram:
    ![ones](./assets/ones.svg)
 
    As you can see, the target as specified by `ones_spec` is all ones, while the solution returns all zeros. So you can use this as a visual aid to compare your solution to the target.
 
-   `make_test` will be able to extract the type information about tensors and generate comforming tensors, but for integer arguments (to specify things like sizes for example), you have to the `add_sizes` argument to pass the value as generated in sample data to your solution function.
+   `make_test` will be able to extract the type information about tensors and generate conforming tensors, but for integer arguments (to specify things like sizes for example), you have specify the `add_sizes` argument to pass the value as generated in sample data to your solution function.
 
 6. `run_test` runs the function returned by `make_test` and displays a puppy if all tests pass 😃
