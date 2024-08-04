@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+torchtyping = "*"
+hypothesis = "*"
+pytest = "*"
+chalk-diagrams = "*"
+ipykernel = "*"
+numpy = "*"
+matplotlib = "*"
+torch = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
