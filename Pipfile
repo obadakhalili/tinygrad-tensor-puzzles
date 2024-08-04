@@ -4,18 +4,14 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-torchtyping = "*"
-hypothesis = "*"
-pytest = "*"
-chalk-diagrams = "*"
-ipykernel = "*"
-numpy = "*"
-matplotlib = "*"
-torch = "*"
 tinygrad = "*"
-ruff = "*"
+numpy = "*"
+hypothesis = "*"
+ipykernel = "*"
+chalk-diagrams = "*"
 
 [dev-packages]
+ruff = "*"
 
 [requires]
 python_version = "3.10"

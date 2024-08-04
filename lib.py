@@ -3,12 +3,13 @@ import random
 from typing import Tuple, Any, Annotated, get_type_hints
 
 import numpy as np
-import torch
-from tinygrad import Tensor
+
+from tinygrad import Tensor, dtypes
+from tinygrad.dtype import DType
 
 from hypothesis.extra.numpy import arrays
 from hypothesis.strategies import integers, composite
-from hypothesis import given
+from hypothesis import given, settings
 
 from chalk import hcat, vcat, text, rectangle, set_svg_height, vstrut
 from colour import Color
@@ -19,10 +20,20 @@ class TensorType(Tensor):
   # def __new__(cls, *args, **kwargs):
   #     raise RuntimeError(f"Class {cls.__name__} cannot be instantiated.")
 
-  def __class_getitem__(cls, shape: Tuple[Any, ...]):
-    if not isinstance(shape, tuple):
-      shape = (shape,)
-    return Annotated[Tensor, {"shape": shape}]
+  def __class_getitem__(cls, args: Tuple[Any, ...]):
+    if not isinstance(args, tuple):
+      args = (args,)
+    info = {}
+    for arg in args:
+      if (
+        isinstance(arg, list)
+        and info.get("shape") is None
+        and all(isinstance(a, (str, int)) for a in arg)
+      ):
+        info["shape"] = tuple(arg)
+      elif isinstance(arg, DType):
+        info["dtype"] = arg
+    return Annotated[Tensor, info]
 
 
 def color(v):
@@ -108,20 +119,17 @@ def draw_examples(name, examples):
   return draw_example(data)
 
 
-tensor = torch.tensor
-
-numpy_to_torch_dtype_dict = {
-  bool: torch.bool,
-  np.uint8: torch.uint8,
-  np.int8: torch.int8,
-  np.int16: torch.int16,
-  np.int32: torch.int32,
-  np.int64: torch.int64,
-  np.float16: torch.float16,
-  np.float32: torch.float32,
-  np.float64: torch.float64,
+tinygrad_to_numpy_dtype = {
+  dtypes.bool: np.bool,
+  dtypes.uint8: np.uint8,
+  dtypes.int8: np.int8,
+  dtypes.int16: np.int16,
+  dtypes.int32: np.int32,
+  dtypes.int64: np.int64,
+  dtypes.float16: np.float16,
+  dtypes.float32: np.float32,
+  dtypes.float64: np.float64,
 }
-torch_to_numpy_dtype_dict = {v: k for k, v in numpy_to_torch_dtype_dict.items()}
 
 
 @composite
@@ -163,13 +171,9 @@ def spec(draw, x, min_size=1):
       [sizes[d] if isinstance(d, str) else d for d in gth[k].__metadata__[0]["shape"]]
     )
     dtype = (
-      torch_to_numpy_dtype_dict[
-        # fix this
-        # gth[k].__metadata__[0]["details"][1].dtype
-        torch.int32
-      ]
-      if len(gth[k].__metadata__[0]["shape"]) >= 2
-      else int
+      tinygrad_to_numpy_dtype[gth[k].__metadata__[0]["dtype"]]
+      if hasattr(gth[k].__metadata__[0], "dtype")
+      else np.int32
     )
     ret[k] = draw(
       arrays(
@@ -199,13 +203,15 @@ def make_test(name, problem, problem_spec, add_sizes=[], constraint=lambda d: d)
 
     yours = None
     try:
-      yours = problem(*map(tensor, example.values()))
+      yours = problem(
+        *map(lambda v: v if isinstance(v, int) else Tensor(v), example.values())
+      )
 
     except NotImplementedError:
       pass
     for size in add_sizes:
       del example[size]
-    example["target"] = tensor(out)
+    example["target"] = Tensor(out)
     if yours is not None:
       example["yours"] = yours
     examples.append(example)
@@ -214,6 +220,7 @@ def make_test(name, problem, problem_spec, add_sizes=[], constraint=lambda d: d)
   display(SVG(diagram._repr_svg_()))
 
   @given(spec(problem))
+  @settings(deadline=None)
   def test_problem(d):
     d, sizes = d
     d = constraint(d)
@@ -223,10 +230,11 @@ def make_test(name, problem, problem_spec, add_sizes=[], constraint=lambda d: d)
     for size in add_sizes:
       d[size] = sizes[size]
 
-    out2 = problem(*map(tensor, d.values()))
-    out = tensor(out)
-    out2 = torch.broadcast_to(out2, out.shape)
-    assert torch.allclose(out, out2), (
+    out = Tensor(out)
+    out2 = problem(
+      *map(lambda v: v if isinstance(v, int) else Tensor(v), d.values())
+    )._broadcast_to(out.shape)
+    assert np.allclose(out.numpy(), out2.numpy()), (
       "Two tensors are not equal\n Spec: \n\t%s \n\t%s" % (out, out2)
     )
 

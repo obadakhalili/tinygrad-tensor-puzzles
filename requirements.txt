@@ -1,8 +1,5 @@
-jupytext
-torchtyping
-hypothesis
-torch==1.10
+tinygrad
 numpy
-pytest
-notebookjs
-jupyter
+hypothesis
+ipykernel
+chalk-diagrams
