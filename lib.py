@@ -33,7 +33,7 @@ class TensorType(Tensor):
     return Annotated[Tensor, info]
 
 
-def color(v):
+def _color(v):
   d = rectangle(1, 1)
   if v == 0:
     return d
@@ -43,13 +43,13 @@ def color(v):
     return d.fill_color(Color("blue")).fill_opacity(0.4 + 0.6 * (abs(v) / 10))
 
 
-def draw_matrix(mat):
+def _draw_matrix(mat):
   return vcat(
-    (hcat((color(v) for j, v in enumerate(inner))) for i, inner in enumerate(mat))
+    (hcat((_color(v) for j, v in enumerate(inner))) for i, inner in enumerate(mat))
   )
 
 
-def grid(diagrams):
+def _grid(diagrams):
   mhs = [0] * 100
   mws = [0] * 100
   for i, row in enumerate(diagrams):
@@ -72,7 +72,7 @@ def grid(diagrams):
   )
 
 
-def draw_example(data):
+def _draw_example(data):
   name = data["name"]
   keys = list(data["vals"][0].keys())
   cols = []
@@ -86,10 +86,10 @@ def draw_example(data):
     ]
     for ex in data["vals"]:
       v2 = ex[k]
-      mat.append(draw_matrix(v2))
+      mat.append(_draw_matrix(v2))
     cols.append(mat)
 
-  full = grid(cols)
+  full = _grid(cols)
 
   full = (
     vstrut(1)
@@ -112,10 +112,10 @@ def draw_examples(name, examples):
       for example in examples
     ],
   }
-  return draw_example(data)
+  return _draw_example(data)
 
 
-tinygrad_to_numpy_dtype = {
+_tinygrad_to_numpy_dtype = {
   dtypes.bool: np.bool,
   dtypes.uint8: np.uint8,
   dtypes.int8: np.int8,
@@ -129,7 +129,7 @@ tinygrad_to_numpy_dtype = {
 
 
 @composite
-def spec(draw, x, min_size=1):
+def _spec(draw, x, min_size=1):
   # Get the type hints.
   if sys.version_info >= (3, 9):
     gth = get_type_hints(x, include_extras=True)
@@ -167,7 +167,7 @@ def spec(draw, x, min_size=1):
       [sizes[d] if isinstance(d, str) else d for d in gth[k].__metadata__[0]["shape"]]
     )
     dtype = (
-      tinygrad_to_numpy_dtype[gth[k].__metadata__[0]["dtype"]]
+      _tinygrad_to_numpy_dtype[gth[k].__metadata__[0]["dtype"]]
       if hasattr(gth[k].__metadata__[0], "dtype")
       else np.int32
     )
@@ -188,7 +188,7 @@ def spec(draw, x, min_size=1):
 def make_test(name, problem, problem_spec, add_sizes=[], constraint=lambda d: d):
   examples = []
   for i in range(3):
-    example, sizes = spec(problem, 3).example()
+    example, sizes = _spec(problem, 3).example()
     example = constraint(example)
     out = example["return"].tolist()
     del example["return"]
@@ -215,7 +215,7 @@ def make_test(name, problem, problem_spec, add_sizes=[], constraint=lambda d: d)
   diagram = draw_examples(name, examples)
   display(SVG(diagram._repr_svg_()))
 
-  @given(spec(problem))
+  @given(_spec(problem))
   @settings(deadline=None)
   def test_problem(d):
     d, sizes = d
@@ -294,3 +294,6 @@ def run_test(fn):
     """
     % (random.sample(pups, 1)[0])
   )
+
+
+__all__ = ["draw_examples", "make_test", "run_test", "TensorType"]
