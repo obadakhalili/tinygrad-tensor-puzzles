@@ -1,0 +1,5 @@
+[tool.ruff]
+include = ["lib.py"]
+line-length = 88
+indent-width = 2
+target-version = "py310"
