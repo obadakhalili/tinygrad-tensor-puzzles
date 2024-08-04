@@ -1,8 +1,6 @@
 # tinygrad Tensor Puzzles
 
-This fork is an adaptation of [Sasha's Tensor Puzzles](https://github.com/srush/Tensor-Puzzles) in tinygrad.
-
-<hr/>
+> This fork is an adaptation of [Sasha's Tensor Puzzles](https://github.com/srush/Tensor-Puzzles) in tinygrad.
 
 When learning a tensor programming language like PyTorch or Numpy it
 is tempting to rely on the standard library (or more honestly
