@@ -23,7 +23,7 @@ If you are interested, there is also a YouTube walkthrough of the puzzles by the
 
 ## Start
 
-To start, install the dependencies using pipenv with `pipenv install` or using pip with `pip install -r requirements.txt`.
+To start, install the dependencies using pipenv with `pipenv install` or using pip with `pip install -r requirements.txt`. Then head to `src/puzzles.ipynb` after you have read the Rules and Notes sections below and start coding!
 
 ## Rules
 
