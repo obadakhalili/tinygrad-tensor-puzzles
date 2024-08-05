@@ -81,8 +81,6 @@ You can inspect and import code from `src/solutions.py` to compare against your 
     draw_examples("arange", [{"input": Tensor([i]), "output": arange(i)} for i in [5, 3, 9]])
    ```
 
-   `draw_examples` uses a composite [Hypothesis](https://hypothesis.works/) strategy to generate sample data, which is used here and in the test utility, as will be seen later.
-
    In a Jupyter notebook, the output is displayed as:
    ![arange colors](./assets/arange-colors.svg)
 
@@ -91,6 +89,8 @@ You can inspect and import code from `src/solutions.py` to compare against your 
    ![arange values](./assets/arange-values.svg)
 
 5. `make_test` takes a title, solution, spec function, and other configuration arguments, and performs two things: first, it draws an example depicting your solution's output compared to the spec function's output. second, it returns a test function which when executed will test your solution with a set of drawn sample data.
+
+   `make_test` uses a composite [Hypothesis](https://hypothesis.works/) strategy to generate sample data, which is used here and in the test utility, as will be seen later.
 
    Let's take as an example the `ones` puzzle, which given an integer `i` returns a tensor of size `i` filled with ones. For the sake of demonstration, let's assume the solution is implemented incorrectly, returning a tensor of zeros instead of ones.
 
@@ -117,7 +117,7 @@ You can inspect and import code from `src/solutions.py` to compare against your 
    If you would like to display the values instead, pass `display_values=True` to `make_test`.
    ![onesvalues](./assets/ones-values.svg)
 
-6. `run_test` runs the function returned by `make_test` and displays a puppy if all tests pass 😃
+7. `run_test` runs the function returned by `make_test` and displays a puppy if all tests pass 😃
 
 ## Sample Puzzles
 
