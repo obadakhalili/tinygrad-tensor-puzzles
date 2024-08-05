@@ -64,9 +64,7 @@ def pad_to(a: TT[["i"]], i: int, j: int) -> TT[["j"]]:
   raise NotImplementedError
 
 
-def sequence_mask(
-  values: TT[["i", "j"]], length: TT[["i"], dtypes.int]
-) -> TT[["i", "j"]]:
+def sequence_mask(values: TT[["i", "j"]], length: TT[["i"], dtypes.int]) -> TT[["i", "j"]]:  # fmt: off
   raise NotImplementedError
 
 

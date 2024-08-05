@@ -25,6 +25,8 @@ If you are interested, there is also a YouTube walkthrough of the puzzles by the
 
 To start, install the dependencies using pipenv with `pipenv install` or using pip with `pip install -r requirements.txt`. Then head to `src/puzzles.ipynb` after you have read the Rules and Notes sections below and start coding!
 
+You can inspect and import code from `src/solutions.py` to compare against your own solutions.
+
 ## Rules
 
 1. Each puzzle needs to be solved in 1 line (<80 columns) of code
