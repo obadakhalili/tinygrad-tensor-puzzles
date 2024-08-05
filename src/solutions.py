@@ -60,7 +60,7 @@ def vstack(a: TT[["i"]], b: TT[["i"]]) -> TT[[2, "i"]]:
   return Tensor([[1], [0]]) * a + Tensor([[0], [1]]) * b
 
 
-# TODO: should I make i as tensor to show in diagrams, or should I show sizes in diagrams directly instead?
+# TODO: should I make i as tensor to show in diagrams? should I show sizes in diagrams directly instead?
 def roll(a: TT[["i"]], i: int) -> TT[["i"]]:
   return a[_m((arange(i) + 1), i)]
 
@@ -73,8 +73,8 @@ def compress(g: TT[["i"], dtypes.bool], v: TT[["i"]], i: int) -> TT[["i"]]:
   return (g * cumsum(1 * g) == (arange(i) + 1)[:, None]) @ v
 
 
-def pad_to(a: TT[["i"]], i: int, j: int) -> TT[["j"]]:
-  raise NotImplementedError
+def pad_to(a: TT[["i"]], j: int) -> TT[["j"]]:
+  return a @ (arange(a.shape[0])[:, None] == arange(j))
 
 
 def sequence_mask(values: TT[["i", "j"]], length: TT[["i"], dtypes.int]) -> TT[["i", "j"]]:  # fmt: off
