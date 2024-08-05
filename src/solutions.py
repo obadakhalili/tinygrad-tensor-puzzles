@@ -13,23 +13,24 @@ def where(q, a, b):
 
 
 def ones(i: int) -> TT[["i"]]:
-  raise NotImplementedError
+  return (arange(i) >= 0) * 1
 
 
 def sum(a: TT[["i"]]) -> TT[[1]]:
-  raise NotImplementedError
+  # `[:, None]` is necessary to keep the shape of the output tensor.
+  return a @ ones(a.shape[0])[:, None]
 
 
 def outer(a: TT[["i"]], b: TT[["j"]]) -> TT[["i", "j"]]:
-  raise NotImplementedError
+  return a[:, None] * b
 
 
 def diag(a: TT[["i", "i"]]) -> TT[["i"]]:
-  raise NotImplementedError
+  return a[arange(a.shape[0]), arange(a.shape[0])]
 
 
 def eye(j: int) -> TT[["j", "j"]]:
-  raise NotImplementedError
+  return (arange(j)[:, None] == arange(j)) * 1
 
 
 def triu(j: int) -> TT[["j", "j"]]:
