@@ -118,3 +118,64 @@ You can inspect and import code from `src/solutions.py` to compare against your 
    ![onesvalues](./assets/ones-values.svg)
 
 6. `run_test` runs the function returned by `make_test` and displays a puppy if all tests pass 😃
+
+## Sample Puzzles
+
+### sequence_mask
+
+Compute [sequence_mask](https://www.tensorflow.org/api_docs/python/tf/sequence_mask) - pad out to length per batch.
+
+```py
+def sequence_mask_spec(values, length, out):
+  for i in range(len(out)):
+    for j in range(len(out[0])):
+      if j < length[i]:
+        out[i][j] = values[i][j]
+      else:
+        out[i][j] = 0
+
+
+def sequence_mask(values: TT[["i", "j"]], length: TT[["i"], dtypes.int]) -> TT[["i", "j"]]:
+  raise NotImplementedError
+
+
+def constraint_set_length(d):
+  d["length"] = d["length"] % d["values"].shape[1]
+  return d
+
+
+test_sequence = make_test(
+  "sequence_mask",
+  sequence_mask,
+  sequence_mask_spec,
+  constraint=constraint_set_length,
+  display_values=True,
+)
+```
+
+![sequence-mask](./assets/sequence-mask.svg)
+
+### bincount
+
+Compute [repeat](https://docs.tinygrad.org/tensor/movement/?h=repeat#tinygrad.Tensor.repeat)
+
+```python
+def repeat_spec(a, d, out):
+  for i in range(d[0]):
+    for k in range(len(a)):
+      out[i][k] = a[k]
+
+
+def constraint_set(d):
+  d["d"][0] = d["return"].shape[0]
+  return d
+
+
+def repeat(a: TT[["i"]], d: TT[[1]]) -> TT[["d", "i"]]:
+  raise NotImplementedError
+
+
+test_repeat = make_test("repeat", repeat, repeat_spec, constraint=constraint_set)
+```
+
+![repeat](./assets/repeat.svg)
