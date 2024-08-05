@@ -33,19 +33,27 @@ class TinyType(Tensor):
     return Annotated[Tensor, info]
 
 
-def _color(v):
+def _color(v, display_values):
   d = rectangle(1, 1)
-  if v == 0:
-    return d
-  elif v > 0:
-    return d.fill_color(Color("orange")).fill_opacity(0.4 + 0.6 * (v / 10))
-  elif v < 0:
-    return d.fill_color(Color("blue")).fill_opacity(0.4 + 0.6 * (abs(v) / 10))
+  if display_values:
+    return d + text(str(v)[:1] if isinstance(v, bool) else str(v), 0.5).fill_color(
+      Color("black")
+    ).line_width(0)
+  else:
+    if v == 0:
+      return d
+    elif v > 0:
+      return d.fill_color(Color("orange")).fill_opacity(0.4 + 0.6 * (v / 10))
+    elif v < 0:
+      return d.fill_color(Color("blue")).fill_opacity(0.4 + 0.6 * (abs(v) / 10))
 
 
-def _draw_matrix(mat):
+def _draw_matrix(mat, display_values):
   return vcat(
-    (hcat((_color(v) for j, v in enumerate(inner))) for i, inner in enumerate(mat))
+    (
+      hcat((_color(v, display_values) for j, v in enumerate(inner)))
+      for i, inner in enumerate(mat)
+    )
   )
 
 
@@ -72,7 +80,7 @@ def _grid(diagrams):
   )
 
 
-def _draw_example(data):
+def _draw_example(data, display_values):
   name = data["name"]
   keys = list(data["vals"][0].keys())
   cols = []
@@ -86,7 +94,7 @@ def _draw_example(data):
     ]
     for ex in data["vals"]:
       v2 = ex[k]
-      mat.append(_draw_matrix(v2))
+      mat.append(_draw_matrix(v2, display_values))
     cols.append(mat)
 
   full = _grid(cols)
@@ -104,7 +112,7 @@ def _draw_example(data):
   return rectangle(env.width, env.height).fill_color(Color("white")) + full
 
 
-def draw_examples(name, examples):
+def draw_examples(name, examples, display_values=False):
   data = {
     "name": name,
     "vals": [
@@ -112,7 +120,7 @@ def draw_examples(name, examples):
       for example in examples
     ],
   }
-  return _draw_example(data)
+  return _draw_example(data, display_values)
 
 
 _tinygrad_to_numpy_dtype = {
@@ -175,7 +183,7 @@ def _spec(draw, x, min_size=1):
       arrays(
         shape=shape,
         dtype=dtype,
-        elements=integers(min_value=-5, max_value=5) if dtype is int else None,
+        elements=integers(min_value=-5, max_value=5) if dtype is np.int32 else None,
         unique=False,
       )
     )
@@ -185,7 +193,14 @@ def _spec(draw, x, min_size=1):
   return ret, sizes
 
 
-def make_test(name, problem, problem_spec, add_sizes=[], constraint=lambda d: d):
+def make_test(
+  name,
+  problem,
+  problem_spec,
+  add_sizes=[],
+  constraint=lambda d: d,
+  display_values=False,
+):
   examples = []
   for i in range(3):
     example, sizes = _spec(problem, 3).example()
@@ -212,7 +227,7 @@ def make_test(name, problem, problem_spec, add_sizes=[], constraint=lambda d: d)
       example["yours"] = yours
     examples.append(example)
 
-  diagram = draw_examples(name, examples)
+  diagram = draw_examples(name, examples, display_values)
   display(SVG(diagram._repr_svg_()))
 
   @given(_spec(problem))
