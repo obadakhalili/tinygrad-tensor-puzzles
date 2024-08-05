@@ -34,15 +34,16 @@ def eye(j: int) -> TT[["j", "j"]]:
 
 
 def triu(j: int) -> TT[["j", "j"]]:
-  raise NotImplementedError
+  return (arange(j)[:, None] <= arange(j)) * 1
 
 
 def cumsum(a: TT[["i"]]) -> TT[["i"]]:
-  raise NotImplementedError
+  return a @ triu(a.shape[0])
 
 
-def diff(a: TT[["i"]], i: int) -> TT[["i"]]:
-  raise NotImplementedError
+def diff(a: TT[["i"]]) -> TT[["i - 1"]]:
+  # TODO: tinygrad sometimes return tensors as floats here
+  return a[(arange(a.shape[0] - 1) + 1).cast(dtypes.int)] - a[arange(a.shape[0] - 1).cast(dtypes.int)]
 
 
 def vstack(a: TT[["i"]], b: TT[["i"]]) -> TT[[2, "i"]]:
