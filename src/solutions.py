@@ -78,15 +78,15 @@ def pad_to(a: TT[["i"]], j: int) -> TT[["j"]]:
 
 
 def sequence_mask(values: TT[["i", "j"]], length: TT[["i"], dtypes.int]) -> TT[["i", "j"]]:  # fmt: off
-  raise NotImplementedError
+  return (arange(values.shape[1]) < length[:, None]) * values
 
 
 def bincount(a: TT[["i"]], j: int) -> TT[["j"]]:
-  raise NotImplementedError
+  return ones(a.shape[0]) @ (a[:, None] == arange(j))
 
 
-def scatter_add(values: TT[["i"]], link: TT[["i"]], j: int) -> TT[["j"]]:
-  raise NotImplementedError
+def scatter_add(value: TT[["i"]], index: TT[["i"]], j: int) -> TT[["j"]]:
+  return value @ (index[:, None] == arange(j))
 
 
 def flatten(a: TT[["i", "j"]], i: int, j: int) -> TT[["i * j"]]:
