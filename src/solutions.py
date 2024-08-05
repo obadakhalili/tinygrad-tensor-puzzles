@@ -105,7 +105,7 @@ def linspace(i: TT[[1]], j: TT[[1]], n: int) -> TT[["n"], dtypes.float]:
 
 
 def heaviside(a: TT[["i"]], b: TT[["i"]]) -> TT[["i"]]:
-  raise NotImplementedError
+  return (a > 0) + (a == 0) * b
 
 
 def repeat(a: TT[["i"]], d: TT[[1]]) -> TT[["d", "i"]]:
