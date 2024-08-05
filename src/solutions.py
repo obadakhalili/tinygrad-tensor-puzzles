@@ -98,7 +98,7 @@ def flatten(a: TT[["i", "j"]]) -> TT[["i * j"]]:
 
 
 def linspace(i: TT[[1]], j: TT[[1]], n: int) -> TT[["n"], dtypes.float]:
-  return (i + (j - i) * (1. * arange(n)) / max(1, n - 1))
+  return i + (j - i) * (1.0 * arange(n)) / max(1, n - 1)
 
   # TODO: make this work with input: [0], [0], and 1
   # return ones(n) * i + (cumsum(ones(n) * 0 + (step := (j - i) / (n - 1))) - step)
@@ -113,4 +113,4 @@ def repeat(a: TT[["i"]], d: TT[[1]]) -> TT[["d", "i"]]:
 
 
 def bucketize(v: TT[["i"]], boundaries: TT[["j"]]) -> TT[["i"]]:
-   return (v[:, None] >= boundaries) @ ones(boundaries.shape[0])
+  return (v[:, None] >= boundaries) @ ones(boundaries.shape[0])
