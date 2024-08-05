@@ -70,7 +70,7 @@ def flip(a: TT[["i"]], i: int) -> TT[["i"]]:
 
 
 def compress(g: TT[["i"], dtypes.bool], v: TT[["i"]], i: int) -> TT[["i"]]:
-  raise NotImplementedError
+  return (g * cumsum(1 * g) == (arange(i) + 1)[:, None]) @ v
 
 
 def pad_to(a: TT[["i"]], i: int, j: int) -> TT[["j"]]:

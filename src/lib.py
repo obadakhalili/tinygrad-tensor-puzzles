@@ -125,14 +125,8 @@ def draw_examples(name, examples, display_values=False):
 
 _tinygrad_to_numpy_dtype = {
   dtypes.bool: np.bool,
-  dtypes.uint8: np.uint8,
-  dtypes.int8: np.int8,
-  dtypes.int16: np.int16,
   dtypes.int32: np.int32,
-  dtypes.int64: np.int64,
-  dtypes.float16: np.float16,
   dtypes.float32: np.float32,
-  dtypes.float64: np.float64,
 }
 
 
@@ -174,16 +168,12 @@ def _spec(draw, x, min_size=1):
     shape = tuple(
       [sizes[d] if isinstance(d, str) else d for d in gth[k].__metadata__[0]["shape"]]
     )
-    dtype = (
-      _tinygrad_to_numpy_dtype[gth[k].__metadata__[0]["dtype"]]
-      if hasattr(gth[k].__metadata__[0], "dtype")
-      else np.int32
-    )
+    dtype = _tinygrad_to_numpy_dtype[gth[k].__metadata__[0].get("dtype", dtypes.int32)]
     ret[k] = draw(
       arrays(
         shape=shape,
         dtype=dtype,
-        elements=integers(min_value=-5, max_value=5) if dtype is np.int32 else None,
+        elements=None if dtype is np.bool else integers(min_value=-5, max_value=5),
         unique=False,
       )
     )
