@@ -54,10 +54,7 @@ def cumsum(a: TT[["i"]]) -> TT[["i"]]:
 
 def diff(a: TT[["i"]]) -> TT[["i - 1"]]:
   # TODO: tinygrad sometimes return tensors as floats here
-  return (
-    a[(arange(a.shape[0] - 1) + 1).cast(dtypes.int)]
-    - a[arange(a.shape[0] - 1).cast(dtypes.int)]
-  )
+  return a[(arange(a.shape[0] - 1) + 1).cast(dtypes.int)]- a[arange(a.shape[0] - 1).cast(dtypes.int)]  # fmt: off
 
 
 def vstack(a: TT[["i"]], b: TT[["i"]]) -> TT[[2, "i"]]:
