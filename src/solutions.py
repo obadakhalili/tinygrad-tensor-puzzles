@@ -113,4 +113,4 @@ def repeat(a: TT[["i"]], d: TT[[1]]) -> TT[["d", "i"]]:
 
 
 def bucketize(v: TT[["i"]], boundaries: TT[["j"]]) -> TT[["i"]]:
-  raise NotImplementedError
+   return (v[:, None] >= boundaries) @ ones(boundaries.shape[0])
