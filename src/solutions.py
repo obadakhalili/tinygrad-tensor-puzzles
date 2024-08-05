@@ -109,7 +109,7 @@ def heaviside(a: TT[["i"]], b: TT[["i"]]) -> TT[["i"]]:
 
 
 def repeat(a: TT[["i"]], d: TT[[1]]) -> TT[["d", "i"]]:
-  raise NotImplementedError
+  return a * ones(d[0].numpy())[:, None]
 
 
 def bucketize(v: TT[["i"]], boundaries: TT[["j"]]) -> TT[["i"]]:
