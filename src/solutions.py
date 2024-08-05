@@ -98,7 +98,10 @@ def flatten(a: TT[["i", "j"]]) -> TT[["i * j"]]:
 
 
 def linspace(i: TT[[1]], j: TT[[1]], n: int) -> TT[["n"], dtypes.float]:
-  raise NotImplementedError
+  return (i + (j - i) * (1. * arange(n)) / max(1, n - 1))
+
+  # TODO: make this work with input: [0], [0], and 1
+  # return ones(n) * i + (cumsum(ones(n) * 0 + (step := (j - i) / (n - 1))) - step)
 
 
 def heaviside(a: TT[["i"]], b: TT[["i"]]) -> TT[["i"]]:

@@ -236,7 +236,7 @@ def make_test(
       *map(lambda v: v if isinstance(v, int) else Tensor(v), d.values())
     )._broadcast_to(out.shape)
     assert np.allclose(out.numpy(), out2.numpy()), (
-      "Two tensors are not equal\n Spec: \n\t%s \n\t%s" % (out, out2)
+      "Two tensors are not equal\n Spec: \n\t%s \n\t%s" % (out.numpy(), out2.numpy())
     )
 
   return test_problem
