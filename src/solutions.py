@@ -7,6 +7,7 @@ def _fd(a: Tensor, b: Tensor) -> Tensor:
   """floor division"""
   return (a / b).floor().cast(dtypes.int)
 
+
 def _m(a: Tensor, b: Tensor) -> Tensor:
   """modulus"""
   return a - _fd(a, b) * b
@@ -53,7 +54,10 @@ def cumsum(a: TT[["i"]]) -> TT[["i"]]:
 
 def diff(a: TT[["i"]]) -> TT[["i - 1"]]:
   # TODO: tinygrad sometimes return tensors as floats here
-  return a[(arange(a.shape[0] - 1) + 1).cast(dtypes.int)] - a[arange(a.shape[0] - 1).cast(dtypes.int)]
+  return (
+    a[(arange(a.shape[0] - 1) + 1).cast(dtypes.int)]
+    - a[arange(a.shape[0] - 1).cast(dtypes.int)]
+  )
 
 
 def vstack(a: TT[["i"]], b: TT[["i"]]) -> TT[[2, "i"]]:
@@ -89,8 +93,8 @@ def scatter_add(value: TT[["i"]], index: TT[["i"]], j: int) -> TT[["j"]]:
   return value @ (index[:, None] == arange(j))
 
 
-def flatten(a: TT[["i", "j"]], i: int, j: int) -> TT[["i * j"]]:
-  raise NotImplementedError
+def flatten(a: TT[["i", "j"]]) -> TT[["i * j"]]:
+  return a[_fd(arange(p := a.shape[0] * a.shape[1]), a.shape[1]), _m(arange(p), a.shape[1])]  # fmt: off
 
 
 def linspace(i: TT[[1]], j: TT[[1]], n: int) -> TT[["n"], dtypes.float]:
