@@ -2,6 +2,16 @@ from lib import TinyType as TT
 from tinygrad import Tensor, dtypes
 
 
+# TODO: tinygrad should support these operations
+def _fd(a: Tensor, b: Tensor) -> Tensor:
+  """floor division"""
+  return (a / b).floor().cast(dtypes.int)
+
+def _m(a: Tensor, b: Tensor) -> Tensor:
+  """modulus"""
+  return a - _fd(a, b) * b
+
+
 def arange(i: int):
   "Use this function to replace a for-loop."
   return Tensor(list(range(i)))
@@ -47,15 +57,16 @@ def diff(a: TT[["i"]]) -> TT[["i - 1"]]:
 
 
 def vstack(a: TT[["i"]], b: TT[["i"]]) -> TT[[2, "i"]]:
-  raise NotImplementedError
+  return Tensor([[1], [0]]) * a + Tensor([[0], [1]]) * b
 
 
+# TODO: should I make i as tensor to show in diagrams, or should I show sizes in diagrams directly instead?
 def roll(a: TT[["i"]], i: int) -> TT[["i"]]:
-  raise NotImplementedError
+  return a[_m((arange(i) + 1), i)]
 
 
 def flip(a: TT[["i"]], i: int) -> TT[["i"]]:
-  raise NotImplementedError
+  return a[:i:][::-1]
 
 
 def compress(g: TT[["i"], dtypes.bool], v: TT[["i"]], i: int) -> TT[["i"]]:
