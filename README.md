@@ -81,13 +81,14 @@ You can inspect and import code from `src/solutions.py` to compare against your 
     draw_examples("arange", [{"input": Tensor([i]), "output": arange(i)} for i in [5, 3, 9]])
    ```
 
-   In a Jupyter notebook, the output is displayed as:
-   ![arange](./assets/arange.svg)
-
-   > [!IMPORTANT]  
-   > In diagrams, 0's are transparent, positives are orange, and negatives are blue.
-
    `draw_examples` uses a composite [Hypothesis](https://hypothesis.works/) strategy to generate sample data, which is used here and in the test utility, as will be seen later.
+
+   In a Jupyter notebook, the output is displayed as:
+   ![arange colors](./assets/arange-colors.svg)
+
+   By default, diagram cells are colored as: transparent for 0's, orange for positives, and blue for negatives.
+   If you would like to display the values instead, pass `display_values=True` to `draw_examples`.
+   ![arange values](./assets/arange-values.svg)
 
 5. `make_test` takes a title, solution, spec function, and other configuration arguments, and performs two things: first, it draws an example depicting your solution's output compared to the spec function's output. second, it returns a test function which when executed will test your solution with a set of drawn sample data.
 
@@ -106,11 +107,14 @@ You can inspect and import code from `src/solutions.py` to compare against your 
    test_ones = make_test("ones", ones, ones_spec, add_sizes=["i"])
    ```
 
+   `make_test` is able to extract type information from `TinyType` and generate conforming tensors, but for integer arguments (to specify things like sizes for example), you have specify the `add_sizes` argument to pass the value as generated in sample data to your solution function.
+
    Running the example above will display the following diagram:
-   ![ones](./assets/ones.svg)
+   ![ones colors](./assets/ones-colors.svg)
 
    As you can see, the target as specified by `ones_spec` is all ones, while the solution returns all zeros. So you can use this as a visual aid to compare your solution to the target.
 
-   `make_test` will be able to extract the type information about tensors and generate conforming tensors, but for integer arguments (to specify things like sizes for example), you have specify the `add_sizes` argument to pass the value as generated in sample data to your solution function.
+   If you would like to display the values instead, pass `display_values=True` to `make_test`.
+   ![onesvalues](./assets/ones-values.svg)
 
 6. `run_test` runs the function returned by `make_test` and displays a puppy if all tests pass 😃
