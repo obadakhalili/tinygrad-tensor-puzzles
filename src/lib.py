@@ -124,7 +124,7 @@ def draw_examples(name, examples, display_values=False):
 
 
 _tinygrad_to_numpy_dtype = {
-  dtypes.bool: np.bool_,
+  dtypes.bool: bool,
   dtypes.int32: np.int32,
   dtypes.float32: np.float32,
 }
