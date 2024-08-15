@@ -124,7 +124,7 @@ def draw_examples(name, examples, display_values=False):
 
 
 _tinygrad_to_numpy_dtype = {
-  dtypes.bool: np.bool,
+  dtypes.bool: bool,
   dtypes.int32: np.int32,
   dtypes.float32: np.float32,
 }
@@ -173,7 +173,7 @@ def _spec(draw, x, min_size=1):
       arrays(
         shape=shape,
         dtype=dtype,
-        elements=None if dtype is np.bool else integers(min_value=-5, max_value=5),
+        elements=None if dtype is bool else integers(min_value=-5, max_value=5),
         unique=False,
       )
     )
