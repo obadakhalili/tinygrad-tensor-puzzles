@@ -173,7 +173,7 @@ def _spec(draw, x, min_size=1):
       arrays(
         shape=shape,
         dtype=dtype,
-        elements=None if dtype is np.bool_ else integers(min_value=-5, max_value=5),
+        elements=None if dtype is bool else integers(min_value=-5, max_value=5),
         unique=False,
       )
     )
