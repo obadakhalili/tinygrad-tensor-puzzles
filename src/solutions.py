@@ -53,7 +53,7 @@ def cumsum(a: TT[["i"]]) -> TT[["i"]]:
 
 
 def diff(a: TT[["i"]]) -> TT[["i - 1"]]:
-  return a[1:]-a[:-1]
+  return a[1:] - a[:-1]
 
 
 def vstack(a: TT[["i"]], b: TT[["i"]]) -> TT[[2, "i"]]:
